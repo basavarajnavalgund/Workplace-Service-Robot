@@ -36,12 +36,12 @@ To launch **RVIZ**
 
 	rviz
 
-![](images/Screenshot from 2020-06-30 01-03-23.png)
+![](images/t1a.png)
 
-![](images/Screenshot from 2020-06-30 01-04-34.png) 
+![](images/t2a.png) 
 
-![](images/Screenshot from 2020-06-30 01-37-21.png)
+![](images/t3a.png)
 
-![](images/Screenshot from 2020-06-30 01-41-29.png)
+![](images/t4a.png)
 
 ![](images/t1gz.png)
