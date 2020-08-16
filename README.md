@@ -1,4 +1,4 @@
-# WOrkplace Service Robot
+# Workplace Service Robot
 
 #### Pre requisites
 
