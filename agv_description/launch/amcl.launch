@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- Map server -->
+  <arg name="map_file" default="$(find agv_description)/maps/test_map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!-- Localization-->
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <remap from="scan" to="agv/laser/scan"/>
+
+    <!-- Overall Filter -->
+    <param name="min_particles" value="500"/>
+    <param name="max_particles" value="2000"/>
+    <param name="update_min_a" value="0.1"/>
+    <param name="update_min_d" value="0.25"/>
+
+    <!-- Laser -->
+    <param name="laser_max_beams" value="20"/>
+    <param name="laser_z_rand" value="0.05"/>
+    <param name="laser_z_hit" value="0.95"/>
+
+    <!-- Odometry -->
+    <param name="odom_model_type" value="diff-corrected"/>
+    <param name="base_frame_id" value="agv_base_footprint"/>
+    <param name="global_frame_id" value="map"/>
+    <param name="odom_frame_id" value="odom"/>
+    <param name="odom_alpha1" value="0.05"/>
+    <param name="odom_alpha2" value="0.05"/>
+    <param name="odom_alpha3" value="0.05"/>
+    <param name="odom_alpha4" value="0.05"/>
+  </node>
+
+  <!-- Move base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find agv_description)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find agv_description)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find agv_description)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find agv_description)/config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find agv_description)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find agv_description)/config/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find agv_description)/param/dwa_local_planner_params.yaml" command="load" />
+    <remap from="cmd_vel" to="cmd_vel"/>
+    <remap from="odom" to="odom"/>
+    <remap from="scan" to="agv/laser/scan"/>
+
+    <param name="base_global_planner" type="string" value="navfn/NavfnROS" />
+    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+
+  </node>
+
+ <!-- frontier_exploration -->
+  <node pkg="frontier_exploration" type="explore_client" name="explore_client" output="screen"/>
+  <node pkg="frontier_exploration" type="explore_server" name="explore_server" output="screen" >
+    <param name="frequency" type="double" value="1.0"/>
+    <param name="goal_aliasing" type="double" value="1.0"/>
+    <rosparam file="$(find agv_description)/param/costmap_common_params.yaml" command="load" ns="explore_costmap" />
+    <rosparam file="$(find agv_description)/config/frontier_exploration.yaml" command="load" ns="explore_costmap" />
+  </node>
+
+
+</launch>

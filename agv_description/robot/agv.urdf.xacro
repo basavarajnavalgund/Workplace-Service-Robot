@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<robot name="agv" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- Import agv wheels -->
+	<xacro:include filename="$(find agv_description)/urdf/wheels/omni_wheel.urdf.xacro" />
+	<xacro:include filename="$(find agv_description)/urdf/base/agv_base.urdf.xacro" />
+
+	<!-- Wheel parameters -->
+	<xacro:property name="wheel_offset_x" value="0.2225" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="wheel_offset_y" value="0.2045" />
+	<xacro:property name="wheel_offset_z" value="0.0" />
+
+	<xacro:macro name="agv">
+		<xacro:agv_base/>
+
+		<xacro:omni_wheel prefix="agv_front_right" parent="agv_base_link" reflect="false">
+			<origin xyz="${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+		</xacro:omni_wheel>
+
+		<xacro:omni_wheel prefix="agv_front_left" parent="agv_base_link" reflect="true">
+			<origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+		</xacro:omni_wheel>
+
+		<xacro:omni_wheel prefix="agv_back_left" parent="agv_base_link" reflect="true">
+			<origin xyz="-${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+		</xacro:omni_wheel>
+
+		<xacro:omni_wheel prefix="agv_back_right" parent="agv_base_link" reflect="false">
+			<origin xyz="-${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+		</xacro:omni_wheel>
+
+        <xacro:omni_steering/>
+		
+
+   </xacro:macro>
+
+   <xacro:agv/>
+
+</robot>

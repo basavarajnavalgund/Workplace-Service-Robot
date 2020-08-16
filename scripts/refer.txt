@@ -1,0 +1,8 @@
+
+
+
+After stop rtabmapping.launch in terminal then we can run the following command:
+
+
+rtabmap-databaseViewer ~/.ros/rtabmap.db
+

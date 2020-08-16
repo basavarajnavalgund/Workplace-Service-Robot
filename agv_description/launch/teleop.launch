@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="agv_description" type="teleop.py" name="slam_teleop_keyboard" output="screen">
+    <param name="scale_linear" value="0.5" type="double"/>
+    <param name="scale_angular" value="1.5" type="double"/>
+    <!-- remap from="slam_teleop_keyboard/cmd_vel" to="cmd_vel_mux/input/teleop"/-->
+    <remap from="slam_teleop_keyboard/cmd_vel" to="/cmd_vel"/>
+  </node>
+</launch>

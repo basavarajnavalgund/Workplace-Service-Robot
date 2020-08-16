@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<robot name="agv" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="agv_base">
+
+    <xacro:include filename="$(find agv_description)/urdf/base/agv_base.gazebo.xacro" />
+	  <!-- Robot mechanical and motor parameters -->
+	  <xacro:property name="PI" value="3.1415926535897931"/>
+	  <xacro:property name="wheel_width" value="0.175" />
+
+  	<!-- BASE FOOTPRINT -->
+		<link name="agv_base_footprint">
+		  <visual>
+			  <origin xyz="0 0 0" rpy="0 0 0" />
+			  <geometry>
+				 <box size="0.001 0.001 0.001" />
+			  </geometry>
+		  </visual>
+		</link>
+
+		<joint name="agv_base_footprint_joint" type="fixed">
+		  <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0" /> <!-- ${wheel_radius} property must be defined inside wheel description -->
+		  <parent link="agv_base_footprint"/>
+		  <child link="agv_base_link" />
+		</joint>
+
+    <!-- BASE_LINK -->
+    <link name="agv_base_link">
+      <inertial>
+        <mass value="125.0" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+
+        <geometry>
+        <mesh filename="package://agv_description/meshes/base/agv_base.dae"/>
+        </geometry>
+
+        <material name="darkgrey">
+          <color rgba="0.1 0.1 0.1 1"/>
+        </material>
+
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0 " />
+        <geometry>
+          <mesh filename="package://agv_description/meshes/base/agv_base.dae"/>
+        </geometry>
+      </collision>
+
+    </link>
+
+
+
+    <link name="camera">
+      <inertial>
+        <mass value="0.1"/>
+        <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+        <inertia
+            ixx="1e-6" ixy="0" ixz="0"
+            iyy="1e-6" iyz="0"
+            izz="1e-6"
+        />
+      </inertial>
+
+      <collision name='collision'>
+        <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.05 0.05 0.05"/>
+        </geometry>
+      </collision>
+
+      <visual name='camera_visual'>
+        <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+        <geometry>
+          <mesh filename="package://agv_description/meshes/sensors/realsense.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint type="fixed" name="camera_joint">
+      <origin xyz="0.35 0 0.42" rpy="0 0 0"/>
+      <child link="camera"/>
+      <parent link="agv_base_footprint"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="10000" velocity="1000"/>
+      <dynamics damping="1.0" friction="1.0"/>
+    </joint>
+    
+    <link name="camera_rgbd_frame"></link>
+
+    <joint name="camera_rgbd_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="-${pi/2} 0 -${pi/2}"/>
+      <parent link="camera"/>
+      <child link="camera_rgbd_frame"/>
+    </joint>
+
+
+    <link name="hokuyo">
+      <inertial>
+        <mass value="0.1"/>
+        <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+        <inertia
+            ixx="1e-6" ixy="0" ixz="0"
+            iyy="1e-6" iyz="0"
+            izz="1e-6"
+        />
+      </inertial>
+
+      <collision name='collision'>
+        <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.1 0.1 0.1"/>
+        </geometry>
+      </collision>
+
+      <visual name='hokuyo_visual'>
+        <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+        <geometry>
+          <mesh filename="package://agv_description/meshes/sensors/rplidar.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint type="fixed" name="hokuyo_joint">
+      <origin xyz="0.12 0 0.42" rpy="0 0 0"/>
+      <child link="hokuyo"/>
+      <parent link="agv_base_footprint"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="10000" velocity="1000"/>
+      <dynamics damping="1.0" friction="1.0"/>
+    </joint>
+
+
+  </xacro:macro>
+
+</robot>

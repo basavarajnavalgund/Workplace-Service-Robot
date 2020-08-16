@@ -1,0 +1,12 @@
+map_type: costmap
+
+obstacle_range: 1.2
+raytrace_range: 1.2
+
+transform_tolerance: 0.4
+
+inflation_radius: 0.5
+
+observation_sources: laser_scan_sensor
+
+laser_scan_sensor: {sensor_frame: rplidar, data_type: LaserScan, topic: /agv/laser/scan, marking: true, clearing: true}
